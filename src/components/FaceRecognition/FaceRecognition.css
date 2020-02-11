@@ -1,0 +1,9 @@
+.imgContainer {
+  margin: 10px auto;
+  width: 500px;
+  height: auto;
+}
+
+img {
+  width: 100%;
+}
