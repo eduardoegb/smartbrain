@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './App.css';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
@@ -7,6 +7,8 @@ import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 
 const particlesOptions = {
   particles: {
@@ -30,7 +32,9 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route: 'signin',
+      isSignedIn: false
     };
   }
 
@@ -69,18 +73,41 @@ class App extends Component {
       .catch(error => console.log(error));
   };
 
+  onRouteChange = route => {
+    if (route === 'home') {
+      this.setState({ isSignedIn: true });
+    } else {
+      this.setState({ isSignedIn: false });
+    }
+    this.setState({ route: route });
+  };
+
   render() {
     return (
       <div className="App">
         <Particles params={particlesOptions} className="particles" />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onButtonClick={this.onButtonClick}
+        <Navigation
+          onRouteChange={this.onRouteChange}
+          isSignedIn={this.state.isSignedIn}
         />
-        <FaceRecognition imageUrl={this.state.imageUrl} box={this.state.box} />
+        {this.state.route === 'home' ? (
+          <Fragment>
+            <Logo />
+            <Rank />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonClick={this.onButtonClick}
+            />
+            <FaceRecognition
+              imageUrl={this.state.imageUrl}
+              box={this.state.box}
+            />
+          </Fragment>
+        ) : this.state.route === 'signin' ? (
+          <SignIn onRouteChange={this.onRouteChange} />
+        ) : (
+          <Register onRouteChange={this.onRouteChange} />
+        )}
       </div>
     );
   }
