@@ -38,6 +38,12 @@ class App extends Component {
     };
   }
 
+  // componentDidMount() {
+  //   fetch('http://localhost:3000')
+  //     .then(response => response.json())
+  //     .then(console.log);
+  // }
+
   calcBoxesLocations = data => {
     const image = document.getElementById('image');
     const width = Number(image.width);
