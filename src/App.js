@@ -26,17 +26,38 @@ const app = new Clarifai.App({
   apiKey: '46e98c96ede3413ab38c38aeb41fd015'
 });
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  boxes: [],
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  }
+};
+
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      boxes: [],
-      route: 'signin',
-      isSignedIn: false
-    };
+    this.state = initialState;
   }
+
+  loadUser = user => {
+    this.setState({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        entries: user.entries,
+        joined: user.joined
+      }
+    });
+  };
 
   // componentDidMount() {
   //   fetch('http://localhost:3000')
@@ -81,13 +102,36 @@ class App extends Component {
         Clarifai.FACE_DETECT_MODEL,
         this.state.input // 'https://samples.clarifai.com/face-det.jpg'
       )
-      .then(response => this.displayBoxes(this.calcBoxesLocations(response)))
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count =>
+              this.setState(Object.assign(this.state.user, { entries: count }))
+            );
+        }
+        this.displayBoxes(this.calcBoxesLocations(response));
+      })
+      // .then(response => response.json())
+      // .then(count =>
+      //   this.setState({
+      //     user: {
+      //       entries: count
+      //     }
+      //   })
+      // )
       .catch(error => console.log(error));
   };
 
   onRouteChange = route => {
     if (route === 'home') {
-      this.setState({ isSignedIn: true });
+      this.setState(initialState);
     } else {
       this.setState({ isSignedIn: false });
     }
@@ -105,7 +149,10 @@ class App extends Component {
         {this.state.route === 'home' ? (
           <Fragment>
             <Logo />
-            <Rank />
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonClick={this.onButtonClick}
@@ -116,9 +163,12 @@ class App extends Component {
             />
           </Fragment>
         ) : this.state.route === 'signin' ? (
-          <SignIn onRouteChange={this.onRouteChange} />
+          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
+          <Register
+            onRouteChange={this.onRouteChange}
+            loadUser={this.loadUser}
+          />
         )}
       </div>
     );
