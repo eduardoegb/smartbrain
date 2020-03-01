@@ -14,7 +14,7 @@ const ImageLinkForm = ({ onInputChange, onButtonClick }) => {
           onChange={onInputChange}
         />
         <button
-          className="w-30 br2 f4 link ph3 pv2 dib white bg-light-purple"
+          className="w-20 br2 f4 link ph3 pv2 dib white bg-light-purple"
           onClick={onButtonClick}
         >
           Detect

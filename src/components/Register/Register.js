@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Input from '../Input/Input';
 
 class Register extends Component {
   constructor(props) {
@@ -57,42 +58,27 @@ class Register extends Component {
           <div className="measure center">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="text"
-                  name="name"
-                  id="name"
-                  onChange={this.onNameChange}
-                />
-              </div>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="email-address">
-                  Email
-                </label>
-                <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="email"
-                  name="email-address"
-                  id="email-address"
-                  onChange={this.onEmailChange}
-                />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={this.onPasswordChange}
-                />
-              </div>
+              <Input
+                title="Name"
+                type="text"
+                name="name"
+                id="name"
+                onChange={this.onNameChange}
+              />
+              <Input
+                title="Email"
+                type="email"
+                name="email-address"
+                id="email-address"
+                onChange={this.onEmailChange}
+              />
+              <Input
+                title="Password"
+                type="password"
+                name="password"
+                id="password"
+                onChange={this.onPasswordChange}
+              />
               <label className="pa0 ma0 lh-copy f6 pointer"></label>
             </fieldset>
             <div className="">

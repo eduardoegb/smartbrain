@@ -114,7 +114,8 @@ class App extends Component {
             .then(response => response.json())
             .then(count =>
               this.setState(Object.assign(this.state.user, { entries: count }))
-            );
+            )
+            .catch(console.log);
         }
         this.displayBoxes(this.calcBoxesLocations(response));
       })
@@ -131,9 +132,9 @@ class App extends Component {
 
   onRouteChange = route => {
     if (route === 'home') {
-      this.setState(initialState);
+      this.setState({ isSignedIn: true });
     } else {
-      this.setState({ isSignedIn: false });
+      this.setState(initialState);
     }
     this.setState({ route: route });
   };
