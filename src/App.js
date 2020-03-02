@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import './App.css';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -21,10 +20,6 @@ const particlesOptions = {
     }
   }
 };
-
-const app = new Clarifai.App({
-  apiKey: '46e98c96ede3413ab38c38aeb41fd015'
-});
 
 const initialState = {
   input: '',
@@ -59,12 +54,6 @@ class App extends Component {
     });
   };
 
-  // componentDidMount() {
-  //   fetch('http://localhost:3000')
-  //     .then(response => response.json())
-  //     .then(console.log);
-  // }
-
   calcBoxesLocations = data => {
     const image = document.getElementById('image');
     const width = Number(image.width);
@@ -97,14 +86,17 @@ class App extends Component {
 
   onButtonClick = () => {
     this.setState({ imageUrl: this.state.input });
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input // 'https://samples.clarifai.com/face-det.jpg'
-      )
+    fetch('https://intense-bayou-66663.herokuapp.com/image', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+      .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://intense-bayou-66663.herokuapp.com/image', {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -119,14 +111,6 @@ class App extends Component {
         }
         this.displayBoxes(this.calcBoxesLocations(response));
       })
-      // .then(response => response.json())
-      // .then(count =>
-      //   this.setState({
-      //     user: {
-      //       entries: count
-      //     }
-      //   })
-      // )
       .catch(error => console.log(error));
   };
 
